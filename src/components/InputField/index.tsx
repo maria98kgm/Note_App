@@ -3,11 +3,17 @@ import uniqid from "uniqid";
 import { NoteItem, notesStorage, TagItem } from "../../App";
 
 interface InputFieldProps {
-  setNoteHandler: (val: NoteItem[]) => void;
+  changeNotesHandler: (val: NoteItem[]) => void;
 }
 
-export const InputField: React.FC<InputFieldProps> = ({ setNoteHandler }) => {
+export const InputField: React.FC<InputFieldProps> = ({
+  changeNotesHandler,
+}) => {
   const [input, setInput] = useState<string>("");
+
+  const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
+    setInput(event.target.value);
+  };
 
   const addNoteHandler = () => {
     const allNotesStr: string | null = localStorage.getItem(notesStorage);
@@ -28,12 +34,8 @@ export const InputField: React.FC<InputFieldProps> = ({ setNoteHandler }) => {
       tags: labledTags ?? [],
       id: uniqid(),
     });
-    setNoteHandler(allNotes);
+    changeNotesHandler(allNotes);
     localStorage.setItem(notesStorage, JSON.stringify(allNotes));
-  };
-
-  const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
-    setInput(event.target.value);
   };
 
   return (

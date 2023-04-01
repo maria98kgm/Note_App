@@ -2,7 +2,6 @@ import "./App.css";
 import { ChangeEvent, useEffect, useState } from "react";
 // import reactLogo from "./assets/react.svg";
 // import viteLogo from "/vite.svg";
-import uniqid from "uniqid";
 import { Note } from "./components/Note";
 import { InputField } from "./components/InputField";
 
@@ -21,37 +20,9 @@ export interface NoteItem {
 }
 
 function App() {
-  // const [input, setInput] = useState<string>("");
   const [notes, setNotes] = useState<NoteItem[]>([]);
 
-  // const addNoteHandler = () => {
-  //   const allNotesStr: string | null = localStorage.getItem(notesStorage);
-  //   const allNotes: NoteItem[] = allNotesStr ? JSON.parse(allNotesStr) : [];
-
-  //   const regex: RegExp = /#\w+/gi;
-  //   const tags: string[] | null = input.match(regex);
-  //   const labledTags: TagItem[] | undefined = tags?.map((item) => ({
-  //     tagName: item,
-  //     id: uniqid(),
-  //   }));
-
-  //   const formattedTitle = input.replaceAll("#", "");
-
-  //   allNotes.push({
-  //     title: input,
-  //     formattedTitle: formattedTitle,
-  //     tags: labledTags ?? [],
-  //     id: uniqid(),
-  //   });
-  //   setNotes(allNotes);
-  //   localStorage.setItem(notesStorage, JSON.stringify(allNotes));
-  // };
-
-  // const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
-  //   setInput(event.target.value);
-  // };
-
-  const setNoteHandler = (val: NoteItem[]) => {
+  const changeNotesHandler = (val: NoteItem[]) => {
     setNotes(val);
   };
 
@@ -62,9 +33,7 @@ function App() {
 
   return (
     <div className="App">
-      {/* <input type="text" name="note" onChange={handleInput} value={input} />
-      <button onClick={addNoteHandler}>Add</button> */}
-      <InputField setNoteHandler={setNoteHandler} />
+      <InputField changeNotesHandler={changeNotesHandler} />
       {notes.map((item) => {
         return (
           <Note
@@ -73,6 +42,7 @@ function App() {
             formattedTitle={item.formattedTitle}
             tags={item.tags}
             id={item.id}
+            changeNotesHandler={changeNotesHandler}
           />
         );
       })}
