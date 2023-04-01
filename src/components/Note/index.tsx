@@ -19,7 +19,7 @@ export const Note: React.FC<NoteProps> = ({
       <h3>{formattedTitle}</h3>
       <div>
         {tags.map((item) => {
-          return <p key={item.id}>{item.tagName}</p>;
+          return <p key={item.id}>{item.name}</p>;
         })}
       </div>
     </div>

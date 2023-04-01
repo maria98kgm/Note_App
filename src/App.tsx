@@ -4,15 +4,16 @@ import { ChangeEvent, useEffect, useState } from "react";
 // import viteLogo from "/vite.svg";
 import uniqid from "uniqid";
 import { Note } from "./components/Note";
+import { InputField } from "./components/InputField";
 
-const notesStorage = "notes";
+export const notesStorage = "notes";
 
 export interface TagItem {
-  tagName: string;
+  name: string;
   id: string;
 }
 
-interface NoteItem {
+export interface NoteItem {
   title: string;
   formattedTitle: string;
   tags: TagItem[];
@@ -20,34 +21,38 @@ interface NoteItem {
 }
 
 function App() {
-  const [input, setInput] = useState<string>("");
+  // const [input, setInput] = useState<string>("");
   const [notes, setNotes] = useState<NoteItem[]>([]);
 
-  const addNoteHandler = () => {
-    const allNotesStr: string | null = localStorage.getItem(notesStorage);
-    const allNotes: NoteItem[] = allNotesStr ? JSON.parse(allNotesStr) : [];
+  // const addNoteHandler = () => {
+  //   const allNotesStr: string | null = localStorage.getItem(notesStorage);
+  //   const allNotes: NoteItem[] = allNotesStr ? JSON.parse(allNotesStr) : [];
 
-    const regex: RegExp = /#\w+/gi;
-    const tags: string[] | null = input.match(regex);
-    const labledTags: TagItem[] | undefined = tags?.map((item) => ({
-      tagName: item,
-      id: uniqid(),
-    }));
+  //   const regex: RegExp = /#\w+/gi;
+  //   const tags: string[] | null = input.match(regex);
+  //   const labledTags: TagItem[] | undefined = tags?.map((item) => ({
+  //     tagName: item,
+  //     id: uniqid(),
+  //   }));
 
-    const formattedTitle = input.replaceAll("#", "");
+  //   const formattedTitle = input.replaceAll("#", "");
 
-    allNotes.push({
-      title: input,
-      formattedTitle: formattedTitle,
-      tags: labledTags ?? [],
-      id: uniqid(),
-    });
-    setNotes(allNotes);
-    localStorage.setItem(notesStorage, JSON.stringify(allNotes));
-  };
+  //   allNotes.push({
+  //     title: input,
+  //     formattedTitle: formattedTitle,
+  //     tags: labledTags ?? [],
+  //     id: uniqid(),
+  //   });
+  //   setNotes(allNotes);
+  //   localStorage.setItem(notesStorage, JSON.stringify(allNotes));
+  // };
 
-  const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
-    setInput(event.target.value);
+  // const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
+  //   setInput(event.target.value);
+  // };
+
+  const setNoteHandler = (val: NoteItem[]) => {
+    setNotes(val);
   };
 
   useEffect(() => {
@@ -57,8 +62,9 @@ function App() {
 
   return (
     <div className="App">
-      <input type="text" name="note" onChange={handleInput} value={input} />
-      <button onClick={addNoteHandler}>Add</button>
+      {/* <input type="text" name="note" onChange={handleInput} value={input} />
+      <button onClick={addNoteHandler}>Add</button> */}
+      <InputField setNoteHandler={setNoteHandler} />
       {notes.map((item) => {
         return (
           <Note
