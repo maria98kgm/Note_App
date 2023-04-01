@@ -4,6 +4,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 // import viteLogo from "/vite.svg";
 import { Note } from "./components/Note";
 import { InputField } from "./components/InputField";
+import { ModalWindow } from "./components/ModalWindow";
 
 export const notesStorage = "notes";
 
@@ -21,6 +22,7 @@ export interface NoteItem {
 
 function App() {
   const [notes, setNotes] = useState<NoteItem[]>([]);
+  const [modal, setModal] = useState(true);
 
   const changeNotesHandler = (val: NoteItem[]) => {
     setNotes(val);
@@ -48,6 +50,7 @@ function App() {
           );
         })}
       </div>
+      {modal ? <ModalWindow /> : null}
     </div>
   );
 }
