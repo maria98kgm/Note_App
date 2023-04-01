@@ -1,4 +1,5 @@
 import React, { ChangeEvent, useState } from "react";
+import "./style.scss";
 import uniqid from "uniqid";
 import { NoteItem, notesStorage, TagItem } from "../../App";
 
@@ -39,9 +40,17 @@ export const InputField: React.FC<InputFieldProps> = ({
   };
 
   return (
-    <div>
-      <input type="text" name="note" onChange={handleInput} value={input} />
-      <button onClick={addNoteHandler}>Add</button>
+    <div className="createNoteBlock">
+      <input
+        type="text"
+        name="note"
+        onChange={handleInput}
+        value={input}
+        className="addField"
+      />
+      <button onClick={addNoteHandler} className="addButton">
+        Add
+      </button>
     </div>
   );
 };

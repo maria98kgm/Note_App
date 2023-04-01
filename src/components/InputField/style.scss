@@ -1,0 +1,17 @@
+@use "../../share/commonStyles.scss" as *;
+
+.createNoteBlock {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.addField {
+  @include inputField($primary-color);
+}
+
+.addButton {
+  @include customButton($primary-color, $primary-dark);
+}
