@@ -1,41 +1,53 @@
-import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { ChangeEvent, useEffect, useState } from "react";
+// import reactLogo from "./assets/react.svg";
+// import viteLogo from "/vite.svg";
+import uniqid from "uniqid";
 import "./App.css";
 
+const notesStorage = "notes";
+
+interface NoteItem {
+  title: string;
+  tags: string[];
+  id: string;
+}
+
 function App() {
-  const [count, setCount] = useState(0);
+  const [input, setInput] = useState<string>("");
+  const [notes, setNotes] = useState<NoteItem[]>([]);
+
+  const addNoteHandler = () => {
+    const allNotesStr: string | null = localStorage.getItem(notesStorage);
+    const allNotes: NoteItem[] = allNotesStr ? JSON.parse(allNotesStr) : [];
+
+    const regex = /#\w+/gi;
+    const tags: string[] | null = input.match(regex);
+
+    allNotes.push({ title: input, tags: tags ?? [], id: uniqid() });
+    setNotes(allNotes);
+    localStorage.setItem(notesStorage, JSON.stringify(allNotes));
+  };
+
+  const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
+    setInput(event.target.value);
+  };
 
   useEffect(() => {
-    fetch(
-      "mongodb+srv://richielaveour:cherry-pie01@cluster0.jzmomxt.mongodb.net/sample_geospatial?retryWrites=true&w=majority"
-    )
-      .then((res) => res.json)
-      .then((res) => console.log(res));
+    const allNotesStr: string | null = localStorage.getItem(notesStorage);
+    if (allNotesStr) setNotes(JSON.parse(allNotesStr));
   }, []);
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <input type="text" name="note" onChange={handleInput} value={input} />
+      <button onClick={addNoteHandler}>Add</button>
+      {notes.map((item) => {
+        return (
+          <div key={item.id}>
+            <p>{item.title}</p>
+          </div>
+        );
+      })}
     </div>
   );
 }
