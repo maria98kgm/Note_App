@@ -1,6 +1,10 @@
-import React, { ChangeEvent, useState } from "react";
-import { NoteItem, TagItem, notesStorage } from "../../App";
+import React, { ChangeEvent, SyntheticEvent, useState } from "react";
+import "./style.scss";
 import uniqid from "uniqid";
+import { NoteItem, TagItem, notesStorage } from "../../App";
+import editIcon from "../../assets/pencil.svg";
+import deleteIcon from "../../assets/trash.svg";
+import loupeIcon from "../../assets/loupe.svg";
 
 interface NoteProps {
   title: string;
@@ -20,7 +24,7 @@ export const Note: React.FC<NoteProps> = ({
   const [editing, setEditing] = useState(false);
   const [input, setInput] = useState(title);
 
-  const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleInput = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setInput(event.target.value);
   };
 
@@ -67,26 +71,52 @@ export const Note: React.FC<NoteProps> = ({
     localStorage.setItem(notesStorage, JSON.stringify(allNotes));
   };
 
+  const handleScroll = (event: SyntheticEvent<HTMLTextAreaElement>) => {
+    document
+      .getElementById("editText")
+      ?.scroll(event.currentTarget.scrollLeft, event.currentTarget.scrollTop);
+  };
+
   return (
-    <div>
-      {editing ? (
-        <div className="editMode">
-          <input type="text" onChange={handleInput} value={input} />
-          <button onClick={saveNoteHandler}>Save</button>
-          <button onClick={cancleEditHandler}>Cancel</button>
+    <div className="note">
+      <div className="showMode">
+        <h3 className="noteTitle">{formattedTitle}</h3>
+        <div className="effectButtons">
+          <button className="expandButton">
+            <img src={loupeIcon} className="logo" alt="expand" />
+          </button>
+          <button onClick={handleEditingMode} className="editButton">
+            <img src={editIcon} className="logo" alt="edit" />
+          </button>
+          <button onClick={deleteNoteHandler} className="deleteButton">
+            <img src={deleteIcon} className="logo" alt="delete" />
+          </button>
         </div>
-      ) : (
-        <div className="showMode">
-          <h3>{formattedTitle}</h3>
-          <button onClick={handleEditingMode}>Edit</button>
-          <button onClick={deleteNoteHandler}>Delete</button>
-        </div>
-      )}
-      <div>
+      </div>
+      <div className="tags">
         {tags.map((item) => {
-          return <p key={item.id}>{item.name}</p>;
+          return (
+            <p key={item.id} className="tagBlock">
+              {item.name}
+            </p>
+          );
         })}
       </div>
     </div>
   );
 };
+
+{
+  /* <div className="editMode">
+<div className="text">
+  <textarea
+    value={input}
+    onChange={handleInput}
+    onScroll={handleScroll}
+  />
+  <div id="editText">{input}</div>
+</div>
+<button onClick={saveNoteHandler}>Save</button>
+<button onClick={cancleEditHandler}>Cancel</button>
+</div> */
+}

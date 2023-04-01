@@ -34,18 +34,20 @@ function App() {
   return (
     <div className="App">
       <InputField changeNotesHandler={changeNotesHandler} />
-      {notes.map((item) => {
-        return (
-          <Note
-            key={item.id}
-            title={item.title}
-            formattedTitle={item.formattedTitle}
-            tags={item.tags}
-            id={item.id}
-            changeNotesHandler={changeNotesHandler}
-          />
-        );
-      })}
+      <div className="notesBlock">
+        {notes.map((item) => {
+          return (
+            <Note
+              key={item.id}
+              title={item.title}
+              formattedTitle={item.formattedTitle}
+              tags={item.tags}
+              id={item.id}
+              changeNotesHandler={changeNotesHandler}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }

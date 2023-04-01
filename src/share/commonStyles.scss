@@ -1,5 +1,11 @@
 $primary-color: #1976d2;
 $primary-dark: #0053a5;
+$edit-color: #7e57c2;
+$edit-dark: #5a3e89;
+$danger-color: #d32f2f;
+$danger-dark: #972222;
+$tag-color: #ffe0b2;
+$tag-dark: #ef6c00;
 
 @mixin inputField($br-color) {
   width: 100%;
@@ -35,5 +41,57 @@ $primary-dark: #0053a5;
   &:hover {
     cursor: pointer;
     background-color: $hover-color;
+  }
+}
+
+@mixin endBlur($color) {
+  &::after {
+    content: "";
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    width: 40px;
+    height: 100%;
+    background: -moz-linear-gradient(
+      left,
+      rgba(255, 255, 255, 0) 0%,
+      $color 100%
+    );
+    background: -webkit-gradient(
+      linear,
+      left top,
+      right top,
+      color-stop(0%, rgba(255, 255, 255, 0)),
+      color-stop(100%, $color)
+    );
+    background: -webkit-linear-gradient(
+      left,
+      rgba(255, 255, 255, 0) 0%,
+      $color 100%
+    );
+    background: -o-linear-gradient(
+      left,
+      rgba(255, 255, 255, 0) 0%,
+      $color 100%
+    );
+    background: -ms-linear-gradient(
+      left,
+      rgba(255, 255, 255, 0) 0%,
+      $color 100%
+    );
+    background: linear-gradient(left, rgba(255, 255, 255, 0) 0%, $color 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 */
+  }
+}
+
+@mixin iconButton($bg-color, $hover-color) {
+  @include customButton($bg-color, $hover-color);
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+
+  .logo {
+    width: 20px;
   }
 }
