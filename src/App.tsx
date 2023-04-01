@@ -1,14 +1,21 @@
+import "./App.css";
 import { ChangeEvent, useEffect, useState } from "react";
 // import reactLogo from "./assets/react.svg";
 // import viteLogo from "/vite.svg";
 import uniqid from "uniqid";
-import "./App.css";
+import { Note } from "./components/Note";
 
 const notesStorage = "notes";
 
+export interface TagItem {
+  tagName: string;
+  id: string;
+}
+
 interface NoteItem {
   title: string;
-  tags: string[];
+  formattedTitle: string;
+  tags: TagItem[];
   id: string;
 }
 
@@ -20,10 +27,21 @@ function App() {
     const allNotesStr: string | null = localStorage.getItem(notesStorage);
     const allNotes: NoteItem[] = allNotesStr ? JSON.parse(allNotesStr) : [];
 
-    const regex = /#\w+/gi;
+    const regex: RegExp = /#\w+/gi;
     const tags: string[] | null = input.match(regex);
+    const labledTags: TagItem[] | undefined = tags?.map((item) => ({
+      tagName: item,
+      id: uniqid(),
+    }));
 
-    allNotes.push({ title: input, tags: tags ?? [], id: uniqid() });
+    const formattedTitle = input.replaceAll("#", "");
+
+    allNotes.push({
+      title: input,
+      formattedTitle: formattedTitle,
+      tags: labledTags ?? [],
+      id: uniqid(),
+    });
     setNotes(allNotes);
     localStorage.setItem(notesStorage, JSON.stringify(allNotes));
   };
@@ -43,9 +61,13 @@ function App() {
       <button onClick={addNoteHandler}>Add</button>
       {notes.map((item) => {
         return (
-          <div key={item.id}>
-            <p>{item.title}</p>
-          </div>
+          <Note
+            key={item.id}
+            title={item.title}
+            formattedTitle={item.formattedTitle}
+            tags={item.tags}
+            id={item.id}
+          />
         );
       })}
     </div>
