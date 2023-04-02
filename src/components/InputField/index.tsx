@@ -5,10 +5,12 @@ import { NoteItem, notesStorage, TagItem } from "../../App";
 
 interface InputFieldProps {
   changeNotesHandler: (val: NoteItem[]) => void;
+  inputType: "createNote" | "filterNotes";
 }
 
 export const InputField: React.FC<InputFieldProps> = ({
   changeNotesHandler,
+  inputType,
 }) => {
   const [input, setInput] = useState<string>("");
 
@@ -39,6 +41,20 @@ export const InputField: React.FC<InputFieldProps> = ({
     localStorage.setItem(notesStorage, JSON.stringify(allNotes));
   };
 
+  const filterNotes = () => {
+    const allNotesStr: string | null = localStorage.getItem(notesStorage);
+    const allNotes: NoteItem[] = allNotesStr ? JSON.parse(allNotesStr) : [];
+
+    if (allNotes.length) {
+      const filteredNotes: NoteItem[] = allNotes.filter((note) => {
+        const filetrTags = input.split(" ");
+        return note.tags.some((item) => filetrTags.includes(item.name));
+      });
+
+      changeNotesHandler(filteredNotes);
+    }
+  };
+
   return (
     <div className="createNoteBlock">
       <input
@@ -46,10 +62,14 @@ export const InputField: React.FC<InputFieldProps> = ({
         name="note"
         onChange={handleInput}
         value={input}
-        className="addField"
+        className="inputField"
       />
-      <button onClick={addNoteHandler} className="addButton">
-        Add
+
+      <button
+        onClick={inputType === "createNote" ? addNoteHandler : filterNotes}
+        className="addButton"
+      >
+        {inputType === "createNote" ? "Add" : "Filter"}
       </button>
     </div>
   );

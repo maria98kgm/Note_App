@@ -34,7 +34,14 @@ function App() {
 
   return (
     <div className="App">
-      <InputField changeNotesHandler={changeNotesHandler} />
+      <InputField
+        changeNotesHandler={changeNotesHandler}
+        inputType="createNote"
+      />
+      <InputField
+        changeNotesHandler={changeNotesHandler}
+        inputType="filterNotes"
+      />
       <div className="notesBlock">
         {notes.map((item) => {
           return (

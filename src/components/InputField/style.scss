@@ -6,10 +6,11 @@
   display: flex;
   align-items: center;
   gap: 2rem;
+  margin-bottom: 1rem;
 }
 
-.addField {
-  @include inputField($primary-color);
+.inputField {
+  @include textField($primary-color);
 }
 
 .addButton {
