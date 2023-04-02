@@ -45,6 +45,12 @@
 .editModal {
   @include modalBlock;
 
+  .editLabel {
+    width: 100%;
+    margin-bottom: 0.4rem;
+    font-size: 17px;
+  }
+
   .textEdit {
     position: relative;
     display: flex;

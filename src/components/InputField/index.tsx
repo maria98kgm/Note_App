@@ -55,14 +55,18 @@ export const InputField: React.FC<InputFieldProps> = ({
 
   return (
     <div className="createNoteBlock">
-      <input
-        type="text"
-        name="note"
-        onChange={handleInput}
-        value={input}
-        className="inputField"
-      />
-
+      <label className="inputLabel">
+        <p className="labelText">
+          {inputType === "createNote" ? "Create note" : "Filter by tag"}:
+        </p>
+        <input
+          type="text"
+          name="note"
+          onChange={handleInput}
+          value={input}
+          className="inputField"
+        />
+      </label>
       <button
         onClick={inputType === "createNote" ? addNoteHandler : filterNotes}
         className="addButton"

@@ -120,11 +120,15 @@ const EditWindow: React.FC<EditWindowProps> = ({
 
   return (
     <div className="editModal">
+      <label htmlFor="editField" className="editLabel">
+        Edit your note:
+      </label>
       <div className="textEdit">
         <textarea
           value={input}
           onChange={inputHandler}
           onScroll={scrollHandler}
+          id="editField"
           className="textareaField"
         />
         <div

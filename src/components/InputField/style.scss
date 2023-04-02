@@ -4,9 +4,18 @@
   width: 100%;
   max-width: 400px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 2rem;
   margin-bottom: 1rem;
+}
+
+.inputLabel {
+  width: 100%;
+
+  .labelText {
+    font-size: 17px;
+    margin-bottom: 0.4rem;
+  }
 }
 
 .inputField {
