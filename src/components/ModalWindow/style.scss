@@ -1,7 +1,7 @@
 @use "../../share/commonStyles.scss" as *;
 
 .modalWindowContainer {
-  position: absolute;
+  position: fixed;
   z-index: 3;
   width: 100%;
   height: 100%;

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, SyntheticEvent, useState } from "react";
+import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import "./style.scss";
 import uniqid from "uniqid";
 import { notesStorage, tagRegex } from "../../share/constants";
@@ -62,6 +62,15 @@ export const ModalWindow: React.FC<ModalWindowProps> = ({
   const closeModal = () => {
     changeModalType(null);
   };
+
+  useEffect(() => {
+    const body = document.querySelector("body") as HTMLBodyElement;
+    body.style.overflow = "hidden";
+
+    return () => {
+      body.style.overflow = "auto";
+    };
+  }, []);
 
   return (
     <div className="modalWindowContainer">
