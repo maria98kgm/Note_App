@@ -1,17 +1,179 @@
-import React from "react";
+import React, { ChangeEvent, SyntheticEvent, useState } from "react";
 import "./style.scss";
+import { NoteItem, TagItem, notesStorage } from "../../App";
+import uniqid from "uniqid";
 
-export const ModalWindow = () => {
+interface ModalWindowProps {
+  noteInfo: NoteItem;
+  changeNotesHandler: (val: NoteItem[]) => void;
+  modalType: string | null;
+  changeModalType: (type: string | null) => void;
+}
+
+interface ViewWindowProps {
+  noteInfo: NoteItem;
+  closeModal: () => void;
+}
+
+interface EditWindowProps {
+  saveEdit: () => void;
+  cancelEdit: () => void;
+  input: string;
+  inputHandler: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+}
+
+interface DeleteWindowProps {
+  deleteNote: () => void;
+  cancelDelete: () => void;
+}
+
+export const ModalWindow: React.FC<ModalWindowProps> = ({
+  noteInfo,
+  changeNotesHandler,
+  modalType,
+  changeModalType,
+}) => {
+  const [input, setInput] = useState(noteInfo.title);
+
+  const inputHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setInput(event.target.value);
+  };
+
+  const saveEdit = () => {
+    const allNotesStr: string = localStorage.getItem(notesStorage) as string;
+    const allNotes: NoteItem[] = JSON.parse(allNotesStr);
+    const noteIndex: number = allNotes.findIndex(
+      (item) => item.id === noteInfo.id
+    ) as number;
+
+    const regex: RegExp = /#\w+/gi;
+    const tags: string[] | null = input.match(regex);
+    const labledTags: TagItem[] | undefined = tags?.map((item) => ({
+      name: item,
+      id: uniqid(),
+    }));
+
+    allNotes[noteIndex].title = input;
+    allNotes[noteIndex].formattedTitle = input.replaceAll("#", "");
+    if (labledTags) allNotes[noteIndex].tags = labledTags;
+
+    changeNotesHandler(allNotes);
+    localStorage.setItem(notesStorage, JSON.stringify(allNotes));
+    changeModalType(null);
+  };
+
+  const deleteNote = () => {
+    const allNotesStr: string = localStorage.getItem(notesStorage) as string;
+    const allNotes: NoteItem[] = JSON.parse(allNotesStr);
+    const noteIndex: number = allNotes.findIndex(
+      (item) => item.id === noteInfo.id
+    ) as number;
+
+    allNotes.splice(noteIndex, 1);
+    changeNotesHandler(allNotes);
+    localStorage.setItem(notesStorage, JSON.stringify(allNotes));
+
+    changeModalType(null);
+  };
+
+  const closeModal = () => {
+    changeModalType(null);
+  };
+
   return (
     <div className="modalWindowContainer">
       <div className="modalWindow">
-        <div className="deleteModal">
-          <p>Are you sure you want to delete this note?</p>
-          <div className="answerButtons">
-            <button className="yesButton">Yes</button>
-            <button className="noButton">No</button>
-          </div>
-        </div>
+        {modalType === "view" ? (
+          <ViewWindow noteInfo={noteInfo} closeModal={closeModal} />
+        ) : modalType === "edit" ? (
+          <EditWindow
+            saveEdit={saveEdit}
+            cancelEdit={closeModal}
+            input={input}
+            inputHandler={inputHandler}
+          />
+        ) : modalType === "delete" ? (
+          <DeleteWindow deleteNote={deleteNote} cancelDelete={closeModal} />
+        ) : null}
+      </div>
+    </div>
+  );
+};
+
+const ViewWindow: React.FC<ViewWindowProps> = ({ noteInfo, closeModal }) => {
+  return (
+    <div className="viewModal">
+      <p className="modalText">{noteInfo.formattedTitle}</p>
+      <button onClick={closeModal} className="closeModal">
+        Close
+      </button>
+    </div>
+  );
+};
+
+const EditWindow: React.FC<EditWindowProps> = ({
+  saveEdit,
+  cancelEdit,
+  input,
+  inputHandler,
+}) => {
+  const scrollHandler = (event: SyntheticEvent<HTMLTextAreaElement>) => {
+    document
+      .getElementById("textareaHighlight")
+      ?.scroll(event.currentTarget.scrollLeft, event.currentTarget.scrollTop);
+  };
+
+  const regex: RegExp = /#\w+/gi;
+  const tags: string[] | null = input.match(regex);
+  let highlightedText = input;
+
+  tags?.map((item) => {
+    highlightedText = highlightedText.replace(
+      item,
+      `<span class="tagHighlight">${item.toString()}</span>`
+    );
+  });
+
+  return (
+    <div className="editModal">
+      <div className="textEdit">
+        <textarea
+          value={input}
+          onChange={inputHandler}
+          onScroll={scrollHandler}
+          className="textareaField"
+        />
+        <div
+          id="textareaHighlight"
+          dangerouslySetInnerHTML={{ __html: highlightedText }}
+        />
+      </div>
+      <div className="editButtons">
+        <button onClick={saveEdit} className="saveEdit">
+          Save
+        </button>
+        <button onClick={cancelEdit} className="cancelEdit">
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const DeleteWindow: React.FC<DeleteWindowProps> = ({
+  deleteNote,
+  cancelDelete,
+}) => {
+  return (
+    <div className="deleteModal">
+      <p>Are you sure you want to delete this note?</p>
+      <div className="answerButtons">
+        <button className="yesButton" onClick={deleteNote}>
+          Yes
+        </button>
+        <button className="noButton" onClick={cancelDelete}>
+          No
+        </button>
       </div>
     </div>
   );

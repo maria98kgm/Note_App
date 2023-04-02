@@ -95,3 +95,19 @@ $tag-dark: #ef6c00;
     width: 20px;
   }
 }
+
+@mixin modalBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@mixin textareaAndBack {
+  width: 100%;
+  padding: 0.2rem 0.4rem;
+  font-size: 18px;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  letter-spacing: 0.1px;
+  word-spacing: 1px;
+  border: 2px solid;
+}

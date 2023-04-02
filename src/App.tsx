@@ -22,7 +22,6 @@ export interface NoteItem {
 
 function App() {
   const [notes, setNotes] = useState<NoteItem[]>([]);
-  const [modal, setModal] = useState(true);
 
   const changeNotesHandler = (val: NoteItem[]) => {
     setNotes(val);
@@ -41,16 +40,13 @@ function App() {
           return (
             <Note
               key={item.id}
-              title={item.title}
-              formattedTitle={item.formattedTitle}
-              tags={item.tags}
-              id={item.id}
+              noteInfo={item}
               changeNotesHandler={changeNotesHandler}
             />
           );
         })}
       </div>
-      {modal ? <ModalWindow /> : null}
+      {/* {modal ? <ModalWindow /> : null} */}
     </div>
   );
 }

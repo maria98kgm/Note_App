@@ -5,96 +5,47 @@ import { NoteItem, TagItem, notesStorage } from "../../App";
 import editIcon from "../../assets/pencil.svg";
 import deleteIcon from "../../assets/trash.svg";
 import loupeIcon from "../../assets/loupe.svg";
+import { ModalWindow } from "../ModalWindow";
 
 interface NoteProps {
-  title: string;
-  formattedTitle: string;
-  tags: TagItem[];
-  id: string;
+  noteInfo: NoteItem;
   changeNotesHandler: (val: NoteItem[]) => void;
 }
 
-export const Note: React.FC<NoteProps> = ({
-  title,
-  formattedTitle,
-  tags,
-  id,
-  changeNotesHandler,
-}) => {
-  const [editing, setEditing] = useState(false);
-  const [input, setInput] = useState(title);
+export const Note: React.FC<NoteProps> = ({ noteInfo, changeNotesHandler }) => {
+  const [modal, setModal] = useState<string | null>(null);
 
-  const handleInput = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setInput(event.target.value);
-  };
-
-  const handleEditingMode = () => {
-    setEditing(true);
-  };
-
-  const saveNoteHandler = () => {
-    const allNotesStr: string = localStorage.getItem(notesStorage) as string;
-    const allNotes: NoteItem[] = JSON.parse(allNotesStr);
-    const noteIndex: number = allNotes.findIndex(
-      (item) => item.id === id
-    ) as number;
-
-    const regex: RegExp = /#\w+/gi;
-    const tags: string[] | null = input.match(regex);
-    const labledTags: TagItem[] | undefined = tags?.map((item) => ({
-      name: item,
-      id: uniqid(),
-    }));
-
-    allNotes[noteIndex].title = input;
-    allNotes[noteIndex].formattedTitle = input.replaceAll("#", "");
-    if (labledTags) allNotes[noteIndex].tags = labledTags;
-
-    changeNotesHandler(allNotes);
-    localStorage.setItem(notesStorage, JSON.stringify(allNotes));
-    setEditing(false);
-  };
-
-  const cancleEditHandler = () => {
-    setEditing(false);
-  };
-
-  const deleteNoteHandler = () => {
-    const allNotesStr: string = localStorage.getItem(notesStorage) as string;
-    const allNotes: NoteItem[] = JSON.parse(allNotesStr);
-    const noteIndex: number = allNotes.findIndex(
-      (item) => item.id === id
-    ) as number;
-
-    allNotes.splice(noteIndex, 1);
-    changeNotesHandler(allNotes);
-    localStorage.setItem(notesStorage, JSON.stringify(allNotes));
-  };
-
-  const handleScroll = (event: SyntheticEvent<HTMLTextAreaElement>) => {
-    document
-      .getElementById("editText")
-      ?.scroll(event.currentTarget.scrollLeft, event.currentTarget.scrollTop);
+  const changeModalType = (type: string | null) => {
+    setModal(type);
   };
 
   return (
     <div className="note">
       <div className="showMode">
-        <h3 className="noteTitle">{formattedTitle}</h3>
+        <h3 className="noteTitle">{noteInfo.formattedTitle}</h3>
         <div className="effectButtons">
-          <button className="expandButton">
+          <button
+            onClick={() => changeModalType("view")}
+            className="expandButton"
+          >
             <img src={loupeIcon} className="logo" alt="expand" />
           </button>
-          <button onClick={handleEditingMode} className="editButton">
+          <button
+            onClick={() => changeModalType("edit")}
+            className="editButton"
+          >
             <img src={editIcon} className="logo" alt="edit" />
           </button>
-          <button onClick={deleteNoteHandler} className="deleteButton">
+          <button
+            onClick={() => changeModalType("delete")}
+            className="deleteButton"
+          >
             <img src={deleteIcon} className="logo" alt="delete" />
           </button>
         </div>
       </div>
       <div className="tags">
-        {tags.map((item) => {
+        {noteInfo.tags.map((item) => {
           return (
             <p key={item.id} className="tagBlock">
               {item.name}
@@ -102,21 +53,14 @@ export const Note: React.FC<NoteProps> = ({
           );
         })}
       </div>
+      {modal ? (
+        <ModalWindow
+          noteInfo={noteInfo}
+          changeNotesHandler={changeNotesHandler}
+          modalType={modal}
+          changeModalType={changeModalType}
+        />
+      ) : null}
     </div>
   );
 };
-
-{
-  /* <div className="editMode">
-<div className="text">
-  <textarea
-    value={input}
-    onChange={handleInput}
-    onScroll={handleScroll}
-  />
-  <div id="editText">{input}</div>
-</div>
-<button onClick={saveNoteHandler}>Save</button>
-<button onClick={cancleEditHandler}>Cancel</button>
-</div> */
-}
