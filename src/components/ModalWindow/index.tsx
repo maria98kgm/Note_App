@@ -1,31 +1,15 @@
 import React, { ChangeEvent, SyntheticEvent, useState } from "react";
 import "./style.scss";
-import { NoteItem, TagItem, notesStorage } from "../../App";
 import uniqid from "uniqid";
-
-interface ModalWindowProps {
-  noteInfo: NoteItem;
-  changeNotesHandler: (val: NoteItem[]) => void;
-  modalType: string | null;
-  changeModalType: (type: string | null) => void;
-}
-
-interface ViewWindowProps {
-  noteInfo: NoteItem;
-  closeModal: () => void;
-}
-
-interface EditWindowProps {
-  saveEdit: () => void;
-  cancelEdit: () => void;
-  input: string;
-  inputHandler: (event: ChangeEvent<HTMLTextAreaElement>) => void;
-}
-
-interface DeleteWindowProps {
-  deleteNote: () => void;
-  cancelDelete: () => void;
-}
+import { notesStorage, tagRegex } from "../../share/constants";
+import {
+  ModalWindowProps,
+  NoteItem,
+  TagItem,
+  ViewWindowProps,
+  EditWindowProps,
+  DeleteWindowProps,
+} from "../../share/interfaces";
 
 export const ModalWindow: React.FC<ModalWindowProps> = ({
   noteInfo,
@@ -46,8 +30,7 @@ export const ModalWindow: React.FC<ModalWindowProps> = ({
       (item) => item.id === noteInfo.id
     ) as number;
 
-    const regex: RegExp = /#\w+/gi;
-    const tags: string[] | null = input.match(regex);
+    const tags: string[] | null = input.match(tagRegex);
     const labledTags: TagItem[] | undefined = tags?.map((item) => ({
       name: item,
       id: uniqid(),
@@ -123,8 +106,7 @@ const EditWindow: React.FC<EditWindowProps> = ({
       ?.scroll(event.currentTarget.scrollLeft, event.currentTarget.scrollTop);
   };
 
-  const regex: RegExp = /#\w+/gi;
-  const tags: string[] | null = input.match(regex);
+  const tags: string[] | null = input.match(tagRegex);
   let highlightedText = input;
 
   tags?.map((item) => {

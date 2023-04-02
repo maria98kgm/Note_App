@@ -1,12 +1,8 @@
 import React, { ChangeEvent, useState } from "react";
 import "./style.scss";
 import uniqid from "uniqid";
-import { NoteItem, notesStorage, TagItem } from "../../App";
-
-interface InputFieldProps {
-  changeNotesHandler: (val: NoteItem[]) => void;
-  inputType: "createNote" | "filterNotes";
-}
+import { notesStorage, tagRegex } from "../../share/constants";
+import { InputFieldProps, NoteItem, TagItem } from "../../share/interfaces";
 
 export const InputField: React.FC<InputFieldProps> = ({
   changeNotesHandler,
@@ -22,8 +18,7 @@ export const InputField: React.FC<InputFieldProps> = ({
     const allNotesStr: string | null = localStorage.getItem(notesStorage);
     const allNotes: NoteItem[] = allNotesStr ? JSON.parse(allNotesStr) : [];
 
-    const regex: RegExp = /#\w+/gi;
-    const tags: string[] | null = input.match(regex);
+    const tags: string[] | null = input.match(tagRegex);
     const labledTags: TagItem[] | undefined = tags?.map((item) => ({
       name: item,
       id: uniqid(),

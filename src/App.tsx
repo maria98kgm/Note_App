@@ -1,24 +1,9 @@
 import "./App.scss";
-import { ChangeEvent, useEffect, useState } from "react";
-// import reactLogo from "./assets/react.svg";
-// import viteLogo from "/vite.svg";
+import { useEffect, useState } from "react";
 import { Note } from "./components/Note";
 import { InputField } from "./components/InputField";
-import { ModalWindow } from "./components/ModalWindow";
-
-export const notesStorage = "notes";
-
-export interface TagItem {
-  name: string;
-  id: string;
-}
-
-export interface NoteItem {
-  title: string;
-  formattedTitle: string;
-  tags: TagItem[];
-  id: string;
-}
+import { notesStorage } from "./share/constants";
+import { NoteItem } from "./share/interfaces";
 
 function App() {
   const [notes, setNotes] = useState<NoteItem[]>([]);
@@ -53,7 +38,6 @@ function App() {
           );
         })}
       </div>
-      {/* {modal ? <ModalWindow /> : null} */}
     </div>
   );
 }

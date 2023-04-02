@@ -1,16 +1,10 @@
-import React, { ChangeEvent, SyntheticEvent, useState } from "react";
+import React, { useState } from "react";
 import "./style.scss";
-import uniqid from "uniqid";
-import { NoteItem, TagItem, notesStorage } from "../../App";
 import editIcon from "../../assets/pencil.svg";
 import deleteIcon from "../../assets/trash.svg";
 import loupeIcon from "../../assets/loupe.svg";
 import { ModalWindow } from "../ModalWindow";
-
-interface NoteProps {
-  noteInfo: NoteItem;
-  changeNotesHandler: (val: NoteItem[]) => void;
-}
+import { NoteProps } from "../../share/interfaces";
 
 export const Note: React.FC<NoteProps> = ({ noteInfo, changeNotesHandler }) => {
   const [modal, setModal] = useState<string | null>(null);
