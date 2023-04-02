@@ -1,7 +1,7 @@
 import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import "./style.scss";
 import uniqid from "uniqid";
-import { notesStorage, tagRegex } from "../../share/constants";
+import { convertToHtml, notesStorage, tagRegex } from "../../share/constants";
 import {
   ModalWindowProps,
   NoteItem,
@@ -30,8 +30,9 @@ export const ModalWindow: React.FC<ModalWindowProps> = ({
       (item) => item.id === noteInfo.id
     ) as number;
 
-    const tags: string[] | null = input.match(tagRegex);
-    const labledTags: TagItem[] | undefined = tags?.map((item) => ({
+    const tags: string[] = input.match(tagRegex) ?? [];
+    const filtered: string[] = [...new Set(tags)];
+    const labledTags: TagItem[] | undefined = filtered.map((item) => ({
       name: item,
       id: uniqid(),
     }));
@@ -115,15 +116,7 @@ const EditWindow: React.FC<EditWindowProps> = ({
       ?.scroll(event.currentTarget.scrollLeft, event.currentTarget.scrollTop);
   };
 
-  const tags: string[] | null = input.match(tagRegex);
-  let highlightedText = input;
-
-  tags?.map((item) => {
-    highlightedText = highlightedText.replace(
-      item,
-      `<span class="tagHighlight">${item.toString()}</span>`
-    );
-  });
+  const highlightedText = convertToHtml(input.split(""));
 
   return (
     <div className="editModal">

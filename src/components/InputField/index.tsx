@@ -18,15 +18,16 @@ export const InputField: React.FC<InputFieldProps> = ({
     const allNotesStr: string | null = localStorage.getItem(notesStorage);
     const allNotes: NoteItem[] = allNotesStr ? JSON.parse(allNotesStr) : [];
 
-    const tags: string[] | null = input.match(tagRegex);
-    const labledTags: TagItem[] | undefined = tags?.map((item) => ({
+    const tags: string[] = input.match(tagRegex) ?? [];
+    const filtered: string[] = [...new Set(tags)];
+    const labledTags: TagItem[] | undefined = filtered.map((item) => ({
       name: item,
       id: uniqid(),
     }));
 
     const formattedTitle = input.replaceAll("#", "");
 
-    allNotes.push({
+    allNotes.unshift({
       title: input,
       formattedTitle: formattedTitle,
       tags: labledTags ?? [],
