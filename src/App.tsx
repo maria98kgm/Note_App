@@ -4,6 +4,7 @@ import { Note } from "./components/Note";
 import { InputField } from "./components/InputField";
 import { notesStorage } from "./share/constants";
 import { NoteItem } from "./share/interfaces";
+import noteLogo from "./assets/note-app.svg";
 
 function App() {
   const [notes, setNotes] = useState<NoteItem[]>([]);
@@ -19,6 +20,7 @@ function App() {
 
   return (
     <div className="App">
+      <img src={noteLogo} className="noteLogo" alt="logo" />
       <InputField
         changeNotesHandler={changeNotesHandler}
         inputType="createNote"
