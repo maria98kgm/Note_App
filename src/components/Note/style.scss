@@ -50,9 +50,23 @@
 
 .tags {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   gap: 0.4rem;
   margin-top: 1rem;
+
+  .newTag {
+    @include customButton($primary-dark, rgb(212, 212, 212));
+    padding: 6px;
+    background-color: transparent;
+    border: 1px solid $primary-dark;
+    border-radius: 4px;
+    color: $primary-dark;
+  }
+
+  .tagContainer {
+    position: relative;
+  }
 
   .tagBlock {
     padding: 6px;
@@ -60,5 +74,27 @@
     border: 1px solid $tag-dark;
     border-radius: 4px;
     color: $tag-dark;
+  }
+
+  .deleteTag {
+    position: absolute;
+    display: flex;
+    width: 18px;
+    height: 18px;
+    top: -8px;
+    right: -6px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    border: 1px solid $tag-dark;
+    background-color: aliceblue;
+
+    .closeIcon {
+      width: 8px;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 }

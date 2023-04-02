@@ -126,3 +126,36 @@
     @include customButton($primary-color, $primary-dark);
   }
 }
+
+.newTagModal {
+  @include modalBlock;
+
+  .tagLabel {
+    width: 100%;
+    margin-bottom: 0.4rem;
+    font-size: 17px;
+  }
+
+  .tagInputContainer {
+    position: relative;
+    display: flex;
+
+    .tagNameInput {
+      @include textField($tag-dark);
+    }
+  }
+
+  .tagButtons {
+    margin-top: 1rem;
+    display: flex;
+    gap: 2rem;
+
+    .saveTag {
+      @include customButton($edit-color, $edit-dark);
+    }
+
+    .cancelTag {
+      @include customButton($primary-color, $primary-dark);
+    }
+  }
+}

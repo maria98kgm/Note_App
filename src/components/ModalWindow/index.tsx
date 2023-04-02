@@ -1,7 +1,12 @@
 import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import "./style.scss";
 import uniqid from "uniqid";
-import { convertToHtml, notesStorage, tagRegex } from "../../share/constants";
+import {
+  convertToHtml,
+  notesStorage,
+  removeDuplicates,
+  tagRegex,
+} from "../../share/constants";
 import {
   ModalWindowProps,
   NoteItem,
@@ -9,6 +14,7 @@ import {
   ViewWindowProps,
   EditWindowProps,
   DeleteWindowProps,
+  NewTagWindowProps,
 } from "../../share/interfaces";
 
 export const ModalWindow: React.FC<ModalWindowProps> = ({
@@ -18,9 +24,14 @@ export const ModalWindow: React.FC<ModalWindowProps> = ({
   changeModalType,
 }) => {
   const [input, setInput] = useState(noteInfo.title);
+  const [tagInput, setTagInput] = useState("");
 
   const inputHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setInput(event.target.value);
+  };
+
+  const tagInputHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    setTagInput(event.target.value);
   };
 
   const saveEdit = () => {
@@ -31,15 +42,25 @@ export const ModalWindow: React.FC<ModalWindowProps> = ({
     ) as number;
 
     const tags: string[] = input.match(tagRegex) ?? [];
-    const filtered: string[] = [...new Set(tags)];
-    const labledTags: TagItem[] | undefined = filtered.map((item) => ({
-      name: item,
-      id: uniqid(),
-    }));
+    const oldTextTags: string[] =
+      allNotes[noteIndex].title.match(tagRegex) ?? [];
+    const newTags: TagItem[] = allNotes[noteIndex].tags;
+    tags.map((item) => {
+      newTags.unshift({
+        name: item,
+        id: uniqid(),
+      });
+    });
+    const textTagsToRemove: string[] = oldTextTags.filter(
+      (item) => !tags.includes(item)
+    );
+    const sortedTags: TagItem[] = newTags.filter(
+      (item) => !textTagsToRemove.includes(item.name)
+    );
 
     allNotes[noteIndex].title = input;
     allNotes[noteIndex].formattedTitle = input.replaceAll("#", "");
-    if (labledTags) allNotes[noteIndex].tags = labledTags;
+    allNotes[noteIndex].tags = removeDuplicates(sortedTags);
 
     changeNotesHandler(allNotes);
     localStorage.setItem(notesStorage, JSON.stringify(allNotes));
@@ -57,6 +78,25 @@ export const ModalWindow: React.FC<ModalWindowProps> = ({
     changeNotesHandler(allNotes);
     localStorage.setItem(notesStorage, JSON.stringify(allNotes));
 
+    changeModalType(null);
+  };
+
+  const createNewTag = () => {
+    const allNotesStr: string = localStorage.getItem(notesStorage) as string;
+    const allNotes: NoteItem[] = JSON.parse(allNotesStr);
+    const noteIndex: number = allNotes.findIndex(
+      (item) => item.id === noteInfo.id
+    ) as number;
+
+    const newTags: TagItem[] = allNotes[noteIndex].tags;
+    newTags.unshift({
+      name: `#${tagInput.replace(/[\s.,!?`{}();#]/g, "")}`,
+      id: uniqid(),
+    });
+    allNotes[noteIndex].tags = removeDuplicates(newTags);
+
+    changeNotesHandler(allNotes);
+    localStorage.setItem(notesStorage, JSON.stringify(allNotes));
     changeModalType(null);
   };
 
@@ -87,6 +127,13 @@ export const ModalWindow: React.FC<ModalWindowProps> = ({
           />
         ) : modalType === "delete" ? (
           <DeleteWindow deleteNote={deleteNote} cancelDelete={closeModal} />
+        ) : modalType === "newTag" ? (
+          <NewTagWindow
+            saveTag={createNewTag}
+            cancelCreate={closeModal}
+            input={tagInput}
+            inputHandler={tagInputHandler}
+          />
         ) : null}
       </div>
     </div>
@@ -161,6 +208,37 @@ const DeleteWindow: React.FC<DeleteWindowProps> = ({
         </button>
         <button className="noButton" onClick={cancelDelete}>
           No
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const NewTagWindow: React.FC<NewTagWindowProps> = ({
+  saveTag,
+  cancelCreate,
+  input,
+  inputHandler,
+}) => {
+  return (
+    <div className="newTagModal">
+      <label htmlFor="tagField" className="tagLabel">
+        Enter tag name:
+      </label>
+      <div className="tagInputContainer">
+        <input
+          value={input}
+          onChange={inputHandler}
+          placeholder="Enter tag name..."
+          className="tagNameInput"
+        />
+      </div>
+      <div className="tagButtons">
+        <button onClick={saveTag} className="saveTag">
+          Save
+        </button>
+        <button onClick={cancelCreate} className="cancelTag">
+          Cancel
         </button>
       </div>
     </div>

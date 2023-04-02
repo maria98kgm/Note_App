@@ -1,3 +1,5 @@
+import { TagItem } from "./interfaces";
+
 export const notesStorage = "notes";
 export const tagRegex: RegExp = /#\w+/gi;
 export const convertToHtml = (arr: string[]): string => {
@@ -19,4 +21,17 @@ export const convertToHtml = (arr: string[]): string => {
   }
 
   return arr.join("");
+};
+export const removeDuplicates = (arr: TagItem[]) => {
+  const uniqueTagNames: string[] = [];
+  const uniqueTags: TagItem[] = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    if (uniqueTagNames.indexOf(arr[i].name) === -1) {
+      uniqueTagNames.push(arr[i].name);
+      uniqueTags.push(arr[i]);
+    }
+  }
+
+  return uniqueTags;
 };

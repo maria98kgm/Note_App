@@ -45,3 +45,10 @@ export interface DeleteWindowProps {
   deleteNote: () => void;
   cancelDelete: () => void;
 }
+
+export interface NewTagWindowProps {
+  saveTag: () => void;
+  cancelCreate: () => void;
+  input: string;
+  inputHandler: (event: ChangeEvent<HTMLInputElement>) => void;
+}
