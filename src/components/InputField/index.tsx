@@ -64,6 +64,11 @@ export const InputField: React.FC<InputFieldProps> = ({
           name="note"
           onChange={handleInput}
           value={input}
+          placeholder={
+            inputType === "createNote"
+              ? "Enter note content..."
+              : "Enter tag name, exmp. #tag-name..."
+          }
           className="inputField"
         />
       </label>
