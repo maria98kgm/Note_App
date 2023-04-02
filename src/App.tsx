@@ -28,15 +28,19 @@ function App() {
         inputType="filterNotes"
       />
       <div className="notesBlock">
-        {notes.map((item) => {
-          return (
-            <Note
-              key={item.id}
-              noteInfo={item}
-              changeNotesHandler={changeNotesHandler}
-            />
-          );
-        })}
+        {notes.length ? (
+          notes.map((item) => {
+            return (
+              <Note
+                key={item.id}
+                noteInfo={item}
+                changeNotesHandler={changeNotesHandler}
+              />
+            );
+          })
+        ) : (
+          <p className="noNotes">No Notes Found</p>
+        )}
       </div>
     </div>
   );

@@ -40,7 +40,9 @@ export const InputField: React.FC<InputFieldProps> = ({
     const allNotesStr: string | null = localStorage.getItem(notesStorage);
     const allNotes: NoteItem[] = allNotesStr ? JSON.parse(allNotesStr) : [];
 
-    if (allNotes.length) {
+    if (!input.length) {
+      changeNotesHandler(allNotes);
+    } else if (allNotes.length) {
       const filteredNotes: NoteItem[] = allNotes.filter((note) => {
         const filetrTags = input.split(" ");
         return note.tags.some((item) => filetrTags.includes(item.name));
