@@ -164,6 +164,7 @@ const EditWindow: React.FC<EditWindowProps> = ({
   };
 
   const highlightedText = convertToHtml(input.split(""));
+  const shouldDisable = input.length === 0;
 
   return (
     <div className="editModal">
@@ -184,7 +185,11 @@ const EditWindow: React.FC<EditWindowProps> = ({
         />
       </div>
       <div className="editButtons">
-        <button onClick={saveEdit} className="saveEdit">
+        <button
+          onClick={saveEdit}
+          disabled={shouldDisable}
+          className="saveEdit"
+        >
           Save
         </button>
         <button onClick={cancelEdit} className="cancelEdit">
@@ -220,6 +225,8 @@ const NewTagWindow: React.FC<NewTagWindowProps> = ({
   input,
   inputHandler,
 }) => {
+  const shouldDisable = input.length === 0;
+
   return (
     <div className="newTagModal">
       <label htmlFor="tagField" className="tagLabel">
@@ -234,7 +241,7 @@ const NewTagWindow: React.FC<NewTagWindowProps> = ({
         />
       </div>
       <div className="tagButtons">
-        <button onClick={saveTag} className="saveTag">
+        <button onClick={saveTag} disabled={shouldDisable} className="saveTag">
           Save
         </button>
         <button onClick={cancelCreate} className="cancelTag">

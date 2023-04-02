@@ -42,6 +42,11 @@ $tag-dark: #ef6c00;
     cursor: pointer;
     background-color: $hover-color;
   }
+
+  &:disabled {
+    cursor: default;
+    background-color: gray;
+  }
 }
 
 @mixin endBlur($color) {

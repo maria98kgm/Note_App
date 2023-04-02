@@ -53,6 +53,8 @@ export const InputField: React.FC<InputFieldProps> = ({
     }
   };
 
+  const shouldDisable = inputType === "createNote" ? input.length === 0 : false;
+
   return (
     <div className="createNoteBlock">
       <label className="inputLabel">
@@ -74,6 +76,7 @@ export const InputField: React.FC<InputFieldProps> = ({
       </label>
       <button
         onClick={inputType === "createNote" ? addNoteHandler : filterNotes}
+        disabled={shouldDisable}
         className="addButton"
       >
         {inputType === "createNote" ? "Add" : "Filter"}
